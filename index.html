@@ -12,10 +12,70 @@
             justify-content: center;
             align-items: center;
             background-color: #05181e;
+            overflow: hidden;
+        }
+
+        img {
+            max-width: 80%;
+            height: auto;
+            z-index: 1;
+            position: relative;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
         }
     </style>
 </head>
 <body>
-    <img src="logo.svg" alt="Fish Capital Logo" style="max-width: 80%; height: auto;" />
+    <canvas id="waves"></canvas>
+    <img src="logo.svg" alt="Fish Capital Logo" />
+
+    <script>
+        const canvas = document.getElementById("waves");
+        const ctx = canvas.getContext("2d");
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        let mouse = { x: width / 2, y: height / 2 };
+
+        document.addEventListener("mousemove", (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+
+            // smooth ripple rings around cursor
+            for (let i = 0; i < 5; i++) {
+                let radius = 40 + i * 20 + (Date.now() / 10 % 20);
+                ctx.beginPath();
+                ctx.arc(mouse.x, mouse.y, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 - i * 0.02})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        // resize canvas dynamically
+        window.addEventListener("resize", () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        });
+    </script>
 </body>
 </html>
