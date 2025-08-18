@@ -1,91 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
-  <meta charset="UTF-8" />
-  <title>Fish Capital</title>
-  <style>
-    body, html { margin:0; padding:0; overflow:hidden; width:100%; height:100%; background:#05181e; }
-    canvas { position:fixed; top:0; left:0; width:100%; height:100%; }
-    img { position:relative; z-index:1; max-width:80%; height:auto; margin:auto; top:0; bottom:0; left:0; right:0; display:block; }
-  </style>
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <meta charset="UTF-8" />
+    <title>Fish Capital</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #05181e;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <img src="logo.svg" alt="Fish Capital Logo" />
-  
-  <!-- Optional GUI library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
-  <script>
-    const rippleSettings = { maxSize: 100, animationSpeed: 5, strokeColor: [148,217,255] };
-    const canvasSettings = { blur: 8, ratio: 1 };
-    
-    function Coords(x, y) { this.x = x; this.y = y; }
-    
-    function Ripple(x, y, circleSize, ctx) {
-      this.position = new Coords(x,y);
-      this.circleSize = circleSize;
-      this.maxSize = rippleSettings.maxSize;
-      this.opacity = 1;
-      this.ctx = ctx;
-      this.strokeColor = `rgba(${rippleSettings.strokeColor[0]},${rippleSettings.strokeColor[1]},${rippleSettings.strokeColor[2]},${this.opacity})`;
-      this.animationSpeed = rippleSettings.animationSpeed;
-      this.opacityStep = (this.animationSpeed / (this.maxSize - circleSize)) / 2;
-    }
-    Ripple.prototype.update = function() {
-      this.circleSize += this.animationSpeed;
-      this.opacity -= this.opacityStep;
-      this.strokeColor = `rgba(${rippleSettings.strokeColor[0]},${rippleSettings.strokeColor[1]},${rippleSettings.strokeColor[2]},${this.opacity})`;
-    };
-    Ripple.prototype.draw = function() {
-      this.ctx.beginPath();
-      this.ctx.strokeStyle = this.strokeColor;
-      this.ctx.arc(this.position.x, this.position.y, this.circleSize, 0, 2 * Math.PI);
-      this.ctx.stroke();
-    };
-
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const ripples = [];
-    const width = canvas.width = window.innerWidth * canvasSettings.ratio;
-    const height = canvas.height = window.innerHeight * canvasSettings.ratio;
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
-    canvas.style.filter = `blur(${canvasSettings.blur}px)`;
-
-    const addGuiSettings = () => {
-      const gui = new dat.GUI();
-      gui.add(rippleSettings, 'maxSize', 0, 1000);
-      gui.add(rippleSettings, 'animationSpeed', 1, 30);
-      gui.addColor(rippleSettings, 'strokeColor');
-      gui.add(canvasSettings, 'blur', 0, 20).onChange(v => {
-        canvas.style.filter = `blur(${v}px)`;
-      });
-    };
-    addGuiSettings();
-
-    canvas.addEventListener('mousemove', (e) => {
-      ripples.unshift(new Ripple(e.clientX * canvasSettings.ratio, e.clientY * canvasSettings.ratio, 2, ctx));
-    });
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const r = ripples[i];
-        r.update();
-        r.draw();
-        if (r.opacity <= 0) ripples.splice(i,1);
-      }
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth * canvasSettings.ratio;
-      canvas.height = window.innerHeight * canvasSettings.ratio;
-      canvas.style.width = window.innerWidth + 'px';
-      canvas.style.height = window.innerHeight + 'px';
-    });
-  </script>
+    <img src="logo.svg" alt="Fish Capital Logo" style="max-width: 80%; height: auto;" />
 </body>
 </html>
