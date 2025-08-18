@@ -44,38 +44,24 @@
         canvas.width = width;
         canvas.height = height;
 
-        let mouse = { x: width / 2, y: height / 2 };
+        function drawWave(amplitude, wavelength, speed, color, time) {
+            ctx.beginPath();
+            ctx.moveTo(0, height / 2);
 
-        document.addEventListener("mousemove", (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        function draw() {
-            ctx.clearRect(0, 0, width, height);
-
-            // smooth ripple rings around cursor
-            for (let i = 0; i < 5; i++) {
-                let radius = 40 + i * 20 + (Date.now() / 10 % 20);
-                ctx.beginPath();
-                ctx.arc(mouse.x, mouse.y, radius, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(255, 255, 255, ${0.15 - i * 0.02})`;
-                ctx.lineWidth = 2;
-                ctx.stroke();
+            for (let x = 0; x < width; x++) {
+                let y =
+                    height / 2 +
+                    amplitude *
+                        Math.sin((x / wavelength) + time * speed);
+                ctx.lineTo(x, y);
             }
 
-            requestAnimationFrame(draw);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
         }
 
-        draw();
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
 
-        // resize canvas dynamically
-        window.addEventListener("resize", () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-        });
-    </script>
-</body>
-</html>
+            let time = Date.now() * 0.0*
